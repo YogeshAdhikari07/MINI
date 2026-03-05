@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="/css/admin.css">
+    </link>
+</head>
+
+<body>
+    <nav class="border-b-3">
+        <h1 class="text-2xl font-bold">ADMIN PANEL</h1>
+    </nav>
+    <div class="sideBar border-r-3">
+        <ul>
+            <li><img class="h-[1.2rem]" src="/svgImg/teacher.svg" alt="Teacher">Teacher</li>
+            <li><img class="h-[1.2rem]" src="/svgImg/user.svg" alt="User">Users</li>
+            <li><img class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</li>
+            <li><img class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="nav flex items-center justify-between flex-row">
+            <h1 class="text-2xl font-bold">Teacher</h1>
+            <button type="button"
+                class="addteacher flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-[#FDFBD4]"><img
+                    class="h-[1.2rem]" src="/svgImg/add-svg.svg" alt="Add">Add Teacher</button>
+        </div>
+        <div class="slider flex flex-row flex-wrap gap-2 px-3 py-2">
+            <%teacherData.forEach((teacher)=>{%>
+                <span class="border-2 rounded flex justify-center items-center p-2">
+                    <table>
+                        <tr>
+                            <td class="px-2 py-2">
+                                <h2>Teacher Name</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-2 py-2">
+                                <h2><%=teacher.username%></h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-2 py-2">
+                                <button type="button" class="edit flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-red-300"><img class="h-[1.2rem]" src="/svgImg/delete.svg" alt="Delete">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-2 py-2">
+                                <button type="button" class="edit flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-green-300 w-full"><img class="h-[1.2rem]" src="/svgImg/edit.svg" alt="Edit">Edit</button>
+                            </td>
+                        </tr>
+                    </table>
+                </span>
+                <%})%>
+        </div>
+    </div>
+    <div class="teacherform absolute flex h-full w-full top-0 left-0 justify-center items-center hidden">
+        <form action="/user/teacherRegister" method="post"
+            class="border-2 bg-white flex flex-col rounded-[2rem] px-4 py-3 gap-2">
+            <h1 class="text-2xl font-bold text-center">Add Teacher</h1>
+            <div class="data flex flex-col">
+                <label for="username">Username</label>
+                <input class="border-2 rounded-[1rem] px-3 py-2" type="text" name="username" id="username">
+                <label for="password">Password</label>
+                <input class="border-2 rounded-[1rem] px-3 py-2" type="password" name="password" id="password">
+            </div>
+            <div class="buttons flex flex-row px-2 py-2 justify-between gap-5">
+                <button type="submit"
+                    class="flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-black hover:text-white">Register</button>
+                <button type="button"
+                    class="teachercancel flex items-center gap-2 px-4 py-2 border-2 rounded text-black hover:bg-black hover:text-white">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>

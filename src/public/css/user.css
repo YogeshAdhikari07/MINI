@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap');
+*{
+    box-sizing: border-box;
+    font-family: "Varela Round", sans-serif;
+}
+:root {
+    --charcoal-black: #38240D;
+    --charcoal-dark: #1a1c1e;
+    --cool-gray: #6b7280;
+    --cool-gray-light: #9ca3af;
+    --cool-gray-dark: #713600;
+    --soft-ivory: #FDFBD4;
+    --soft-ivory-dark: #e8e6e1;
+    --accent-dark: #3a3d40;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+    background-color: var(--soft-ivory);
+}
+body{
+    display: grid;
+    grid-template-rows: 4rem 1fr;
+    grid-template-columns: 16rem 1fr;
+    grid-template-areas: "nav nav" "sidebar content";
+    color: #38240D;
+}
+nav{
+    grid-area: nav;
+}
+.sideBar{
+    grid-area: sidebar;
+    padding: 1rem  0rem;
+}
+ul{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+li{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0rem 1rem;
+    gap: 1rem;
+    border-bottom: 2px solid black;
+}
