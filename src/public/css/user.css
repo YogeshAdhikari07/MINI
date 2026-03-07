@@ -22,7 +22,7 @@ body{
     display: grid;
     grid-template-rows: 4rem 1fr;
     grid-template-columns: 16rem 1fr;
-    grid-template-areas: "nav nav" "sidebar content";
+    grid-template-areas: "nav nav" "sidebar notes";
     color: #38240D;
 }
 nav{
@@ -44,4 +44,12 @@ li{
     margin: 0rem 1rem;
     gap: 1rem;
     border-bottom: 2px solid black;
+}
+.notes{
+    grid-area: notes;
+    background-color:var(--soft-ivory-dark);
+}
+.user{
+    grid-area: user;
+    background-color:var(--soft-ivory-dark);
 }

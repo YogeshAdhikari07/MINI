@@ -129,14 +129,12 @@ user.get("/adminLogin", (req, res) => {
 });
 user.post("/admin", async (req, res) => {
     const { username, password } = req.body;
-    console.log(username)
     const admin = await adminModule.findOne({
         username:username
     });
     if (!admin) {
         return res.status(404).json({ message: "Not Found!" });
     }else {
-        console.log(password,"   +  ",admin.password)
         const checkpass = await bcrypt.compare(password,admin.password);
         if (!checkpass) {
             return res.status(404).json({ message: "Not Found!" });
@@ -153,5 +151,10 @@ user.post("/admin", async (req, res) => {
             res.redirect('/page/admin')
         }
     }
+});
+//Logout
+user.post("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.redirect("/");
 });
 module.exports = user;
