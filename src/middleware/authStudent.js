@@ -5,7 +5,7 @@ const studentAuth = (req, res, next) => {
         return res.render('not');
     }
     try {
-        const verified = jwt.verify(token,process.env.SECRET_KEY);
+        const verified   = jwt.verify(token,process.env.SECRET_KEY);
         req.user = verified;
         next();
     } catch (err) {

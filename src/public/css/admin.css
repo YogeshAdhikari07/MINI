@@ -22,7 +22,7 @@ body{
     display: grid;
     grid-template-rows: 4rem 1fr;
     grid-template-columns: 16rem 1fr;
-    grid-template-areas: "nav nav" "sidebar content";
+    grid-template-areas: "nav nav" "sidebar teacher";
     color: #38240D;
 }
 nav{
@@ -36,9 +36,9 @@ nav{
     grid-area: sidebar;
     padding: 1rem  0rem;
 }
-.content{
+.teacher{
     background-color: var(--soft-ivory-dark);
-    grid-area: content;
+    grid-area: teacher;
 }
 ul{
     display: flex;
@@ -56,4 +56,9 @@ li{
 .nav
 {
     padding: 1rem 2rem;
+}
+.notes
+{
+    background-color: var(--soft-ivory-dark);
+    grid-area: notes;
 }

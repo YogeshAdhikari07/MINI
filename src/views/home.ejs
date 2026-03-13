@@ -14,9 +14,9 @@
     </nav>
     <div class="sideBar border-r-3">
         <ul>
-            <li><button type="button" id="notes-btn" class="flex flex-row gap-2 items-center px-4 py-2"><img class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</button></li>
-            <li><button type="button" id="users-btn" class="flex flex-row gap-2 items-center px-4 py-2"><img class="h-[1.2rem]" src="/svgImg/user.svg" alt="User">Users</button></li>
-            <li><button type="button" id="logout-btn" class="flex flex-row gap-2 items-center px-4 py-2"><img class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</button></li>
+            <li><button type="button" id="notes-btn" class="flex w-full flex-row gap-2 items-center px-4 py-2"><img class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</button></li>
+            <li><button type="button" id="users-btn" class="flex w-full flex-row gap-2 items-center px-4 py-2"><img class="h-[1.2rem]" src="/svgImg/user.svg" alt="User">Users</button></li>
+            <li><button type="button" id="logout-btn" class="flex w-full flex-row gap-2 items-center px-4 py-2"><img class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</button></li>
         </ul>
     </div>
     <div class="notes">
@@ -24,12 +24,11 @@
             <span class="text-2xl font-bold" id="section-name-notes">Notes</span>
         </div>
         <div class="semesters flex flex-col gap-2 px-4 py-2">
-            <span class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center hover:bg-lime-300"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"> First Semester</span>
-            <span class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center hover:bg-orange-300"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"> Second Semester</span>
-            <span class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center hover:bg-blue-300"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"> Third Semester</span>
-            <span class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center hover:bg-yellow-300"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"> Fourth Semester</span>
-            <span class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center hover:bg-red-300"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"> Fifth Semester</span>
-            <span class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center hover:bg-green-300"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"> Sixth Semester</span>
+            <%semester=["First Semester","Second Semester","Third Semester","Fourth Semester","Fifth Semester","Sixth Semester"]%>
+            <%colour=["lime","orange","blue","yellow","red","green"]%>
+            <%for(let i=0;i<6;++i){%>
+                <span id="<%=(i+1)%>" class="px-4 py-3 border-2 rounded flex flex-row gap-2 items-center <%=`hover:bg-${colour[i]}-300`%>" onclick="location.href='/page/semester/<%=(i+1)%>'"><img class="h-[1.3rem]" src="/svgImg/folder.svg" alt="folder"><%=semester[i]%></span>
+            <%}%>
         </div>
     </div>
     <div class="user hidden">

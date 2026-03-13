@@ -10,19 +10,23 @@
     </link>
 </head>
 
-<body>
+<body class="overflow-x-hidden overflow-y-hidden">
     <nav class="border-b-3">
         <h1 class="text-2xl font-bold">ADMIN PANEL</h1>
     </nav>
     <div class="sideBar border-r-3">
         <ul>
-            <li><img class="h-[1.2rem]" src="/svgImg/teacher.svg" alt="Teacher">Teacher</li>
-            <li><img class="h-[1.2rem]" src="/svgImg/user.svg" alt="User">Users</li>
-            <li><img class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</li>
-            <li><img class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</li>
+            <li><button id="Teacher-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
+                        class="h-[1.2rem]" src="/svgImg/teacher.svg" alt="Teacher">Teacher</button></li>
+            <li><button id="Notes-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
+                        class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</button></li>
+            <li><button id="Logout-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
+                        class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</button></li>
         </ul>
     </div>
-    <div class="content">
+    <!-- //Sections
+//Teacher-Section -->
+    <div class="teacher">
         <div class="nav flex items-center justify-between flex-row">
             <h1 class="text-2xl font-bold">Teacher</h1>
             <button type="button"
@@ -31,7 +35,7 @@
         </div>
         <div class="slider flex flex-row flex-wrap gap-2 px-3 py-2">
             <%teacherData.forEach((teacher)=>{%>
-                <span class="border-2 rounded flex justify-center items-center p-2 bg-violet-200">
+                <span id="<%=teacher._id%>" class="border-2 rounded flex justify-center items-center p-2 bg-violet-200">
                     <table>
                         <tr>
                             <td class="px-2 py-2">
@@ -40,17 +44,24 @@
                         </tr>
                         <tr>
                             <td class="px-2 py-2">
-                                <h2><%=teacher.username%></h2>
+                                <h2>
+                                    <%=teacher.username%>
+                                </h2>
                             </td>
                         </tr>
                         <tr>
                             <td class="px-2 py-2">
-                                <button type="button" class="edit flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-green-300 w-full"><img class="h-[1.2rem]" src="/svgImg/edit.svg" alt="Edit">Edit</button>
+                                <button type="button"
+                                    class="edit flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-green-300 w-full"><img
+                                        class="h-[1.2rem]" src="/svgImg/edit.svg" alt="Edit">Edit</button>
                             </td>
                         </tr>
                         <tr>
                             <td class="px-2 py-2">
-                                <button type="button" class="edit flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-red-300"><img class="h-[1.2rem]" src="/svgImg/delete.svg" alt="Delete">Delete</button>
+                                <button type="button"
+                                    class="delete flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-red-300"
+                                    onclick="deleteTeacher('<%=teacher._id%>')"><img class="h-[1.2rem]"
+                                        src="/svgImg/delete.svg" alt="Delete">Delete</button>
                             </td>
                         </tr>
                     </table>
@@ -58,15 +69,93 @@
                 <%})%>
         </div>
     </div>
+    <!-- notes-section -->
+    <div class="notes hidden overflow-x-hidden overflow-y-scroll">
+        <div class="nav flex items-center justify-between flex-row">
+            <h1 class="text-2xl font-bold">Notes</h1>
+            <button type="button" id="add-course"
+                class="flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-[#FDFBD4]"><img class="h-[1.2rem]"
+                    src="/svgImg/add-svg.svg" alt="Add">Add Course</button>
+        </div>
+        <div class="semesters flex flex-col gap-2 px-4 py-2">
+            <%semester=["First Semester","Second Semester","Third Semester","Fourth Semester","Fifth Semester","Sixth Semester"]%>
+                <%colour=["lime","orange","blue","yellow","red","green"]%>
+                    <%for(let i=0;i<6;++i){%>
+                        <div id="<%=(i+1)%>" class="px-4 py-3 border-2 rounded flex flex-col gap-2 justify-center">
+                            <span class="flex flex-row gap-2 px-4 py-2 border-b-2 w-full"><img class="h-[1.3rem]"
+                                    src="/svgImg/semester.svg" alt="folder">
+                                <h1>
+                                    <%=semester[i]%>
+                                </h1>
+                            </span>
+                            <div class="sub5 flex flex-row gap-3 px-3 py-2">
+                                <%SubjectData.forEach((Subject)=>{%>
+                                    <%if(Number(Subject.semester)===(i+1)){%>
+                                        <span
+                                            class="flex flex-col gap-1 px-3 py-2 border-2 text-center <%=`hover:bg-${colour[i]}-300`%>">
+                                            <table>
+                                                <tr>
+                                                    <td class="px-2 py-2">
+                                                        <h2>SUBJECT</h2>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2 border-b-2">
+                                                        <h2>
+                                                            <%=Subject.subjectName%>
+                                                        </h2>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2">
+                                                        <h2>
+                                                            SUB CODE
+                                                        </h2>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2">
+                                                        <h2>
+                                                            <%=Subject.subjectCode%>
+                                                        </h2>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2">
+                                                        <button type="button"
+                                                            class="edit flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-white w-full"><img
+                                                                class="h-[1.2rem]" src="/svgImg/edit.svg"
+                                                                alt="Edit">Edit</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-2 py-2">
+                                                        <button type="button"
+                                                            class="delete flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-white w-full"><img
+                                                                class="h-[1.2rem]" src="/svgImg/delete.svg"
+                                                                alt="Delete">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </span>
+                                        <%}%>
+                                            <%})%>
+                            </div>
+                        </div>
+                        <%}%>
+        </div>
+    </div>
+    <!-- //forms
+//teacher Register form -->
     <div class="teacherform absolute flex h-full w-full top-0 left-0 justify-center items-center hidden">
         <form action="/user/teacherRegister" method="post"
             class="border-2 bg-white flex flex-col rounded-[2rem] px-4 py-3 gap-2">
             <h1 class="text-2xl font-bold text-center">Add Teacher</h1>
             <div class="data flex flex-col">
                 <label for="username">Teacher Name</label>
-                <input class="border-2 rounded-[1rem] px-3 py-2" type="text" name="username" id="username">
+                <input class="border-2 rounded-[1rem] px-3 py-2" type="text" name="username" id="username" required>
                 <label for="password">Password</label>
-                <input class="border-2 rounded-[1rem] px-3 py-2" type="password" name="password" id="password">
+                <input class="border-2 rounded-[1rem] px-3 py-2" type="password" name="password" id="password" required>
             </div>
             <div class="buttons flex flex-row px-2 py-2 justify-between gap-5">
                 <button type="submit"
@@ -76,6 +165,37 @@
             </div>
         </form>
     </div>
+    <!--Subject-form-->
+    <div id="subjectform" class="absolute flex h-full w-full top-0 left-0 justify-center items-center hidden">
+        <form class="flex flex-col items-center border-2 rounded-[2rem] px-4 py-3 gap-2 bg-white"
+            action="/user/subject-form" method="post">
+            <h1 class="text-2xl font-bold">Add Subject</h1>
+            <div class="data-subject flex flex-col px-2 py-2 gap-1">
+                <label for="subject-name">Subject Name</label>
+                <input class="border-2 rounded-[1rem] px-3 py-2" type="text" name="subjectName" id="subject-name"
+                    required />
+                <label for="subject-code">Subject Code</label>
+                <input class="border-2 rounded-[1rem] px-3 py-2" type="text" name="subjectCode" id="subject-code"
+                    required>
+                <label for="semester">Semester</label>
+                <select name="semester" id="semester" class="border-2 px-2 py-2 rounded">
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                </select>
+            </div>
+            <div class="sub-buttons flex flex-row gap-2 gap-5 justify-between px-2 py-2">
+                <button type="submit"
+                    class="flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-black hover:text-white">Add</button>
+                <button type="button" id="subcancel"
+                    class="flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-black hover:text-white">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <!-- Subject Register form -->
     <script src="/js/admin.js"></script>
 </body>
 

@@ -5,7 +5,8 @@ const bcrypt = require("bcrypt");
 const teacherSchema = require("../modules/teacher");
 const adminModule = require("../modules/admin");
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const semesterModule = require("../modules/semester");
 //Student Routes
 // 1)Student Signup
 user.get("/sign", (req, res) => {
@@ -30,7 +31,7 @@ user.post("/sign", async (req, res) => {
     const token = jwt.sign({
         id:student._id,
         username:student.username
-    },process.env.SECRET_KEY,{expiresIn:'2h'});
+    },process.env.SECRET_KEY,{expiresIn:'12h'});
     res.cookie("token",token, {
         httpOnly: true,   // can't access from JS (security)
         secure: false,    // true in production (HTTPS)
@@ -61,7 +62,7 @@ user.post("/Studentlogin", async (req, res) => {
             const token= jwt.sign({
                 id:student._id,
                 username:username,
-            },process.env.SECRET_KEY,{expiresIn:'24h'});
+            },process.env.SECRET_KEY,{expiresIn:'12h'});
             res.cookie('token',token,{
                 httpOnly: true,   // can't access from JS (security)
                 secure: false,
@@ -89,7 +90,7 @@ user.post("/teacherLogin", async (req, res) => {
             const token = await jwt.sign({
                 id:teacher._id,
                 username:teacher.username
-            },process.env.TEACHER_KEY,{expiresIn:'2h'});
+            },process.env.TEACHER_KEY,{expiresIn:'12h'});
             res.cookie('token',token,{
                 httpOnly:true,
                 secure:false
@@ -122,6 +123,16 @@ user.post('/teacherRegister',async(req,res)=>{
         })
     }
 });
+user.delete("/deleteteacher/:id", async (req, res) => {
+  try{
+    await teacherSchema.findByIdAndDelete(req.params.id);
+    res.status(200).json({message:"Teacher deleted!"});
+  }
+  catch(err)
+  {
+    res.status(503).json({message:"Server Side Error"})
+  }
+});
 //Admin Routes
 //Admin Login
 user.get("/adminLogin", (req, res) => {
@@ -152,6 +163,29 @@ user.post("/admin", async (req, res) => {
         }
     }
 });
+//Course 
+//Add Course
+user.post('/subject-form',async(req,res)=>{
+    const {subjectname,subjectcode,semester} = req.body;
+    try
+    {
+        await semesterModule.create({
+            subjectName:subjectname,
+            subjectCode:subjectcode,
+            semester:semester
+        });
+        res.status(200).json({
+            message:"Saved!"
+        })
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).json({
+            message:"Server Error!"
+        })
+    }
+})
 //Logout
 user.post("/logout", (req, res) => {
     res.clearCookie("token");
