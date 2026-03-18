@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#FDFBD4]">
+    <div class="subjects flex flex-col gap-2 px-4 py-2">
+        <%subjectData.forEach((subject)=>{%>
+            <div class="flex flex-row border-2 justify-between border-black rounded px-2 py-2 items-center gap-2 hover:bg-violet-200" onclick="location.href='/page/notes/<%=subject._id%>'">
+                <span class="flex flex-row gap-2 p-2">
+                    <img class="h-5" src="/svgImg/folder.svg" alt="Folder">
+                    <h1>
+                        <%=subject.subjectName%>
+                    </h1>
+                </span>
+                <h1 class="flex flex-wrap p-2">
+                    Course Code:  <%=subject.subjectCode%>
+                </h1>
+            </div>
+            <%})%>
+    </div>
+</body>
+
+</html>

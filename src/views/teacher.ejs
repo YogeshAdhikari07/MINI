@@ -3,9 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Teacher</title>
+    <link rel="stylesheet" href="/css/teacher.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <h1>teacher</h1>
+<body class="bg-[#FDFBD4]">
+    <nav class="border-b-3">
+        <h1 class="text-2xl font-bold">ADMIN PANEL</h1>
+    </nav>
+    <div class="sideBar border-r-3">
+        <ul>
+            <li><button id="Notes-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
+                        class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</button></li>
+            <li><button id="Logout-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
+                        class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</button></li>
+        </ul>
+    </div>
+    <div class="teacher">
+        <div class="nav flex flex-row justify-between items-center px-4 py-3">
+            <h1 class="text-2xl font-bold">Notes</h1>
+            <button id="addnote" class="flex flex-row border-2 gap-2 px-4 py-3 rounded hover:bg-[#FDFBD4]"><img src="/svgImg/add-svg.svg" alt="ADD" class="h-[1.3rem]"> ADD NOTES</button>
+        </div>
+    </div>
+    <div class="noteform absolute flex h-full w-full justify-center items-center hidden">
+        <form class="border-2 flex flex-col bg-white rounded-[2rem] p-4 gap-2" action="/user/addNotes" method="post" enctype="multipart/form-data">
+            <h1 class="text-2xl font-bold mx-auto">Add Notes</h1>
+            <label for="NoteName">
+                Note Name
+            </label>
+            <input class="border-2 rounded p-2 px-2" type="text" name="Notename" id="NoteName" required/>
+            <label for="subject">Subject</label>
+            <select name="SubjectId" id="subject" class=" border-2 p-2">
+                <%subjectData.forEach((subject)=>{%>
+                    <option value="<%=subject._id%>"><%=subject.subjectName%></option>
+                <%})%>
+            </select>
+            <input type="file" accept=".jpg,.png,.pdf" name="file" class="border-2 h-[100px] flex flex-wrap p-2" required/>
+            <div class="btn flex flex-row gap-5 justify-center items-center">
+                <button type="submit" class="px-3 py-2 bg-black text-white rounded">Add</button>
+                <button id="canbtn" type="button" class="px-3 py-2 bg-black text-white rounded">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const add_btn = document.getElementById("addnote");
+        add_btn.addEventListener("click",()=>{
+            document.querySelector(".noteform").classList.remove("hidden");
+        })
+        document.getElementById("canbtn").addEventListener("click",()=>
+        {
+            document.querySelector(".noteform").classList.add("hidden");
+            document.getElementsByTagName("input")[0].value="";
+            document.getElementsByTagName("select")[0].value="";
+        });
+    </script>
 </body>
 </html>

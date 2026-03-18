@@ -7,6 +7,8 @@ const adminModule = require("../modules/admin");
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const semesterModule = require("../modules/semester");
+const upload = require("../middleware/upload");
+const File = require("../modules/notes");
 //Student Routes
 // 1)Student Signup
 user.get("/sign", (req, res) => {
@@ -185,6 +187,18 @@ user.post('/subject-form',async(req,res)=>{
             message:"Server Error!"
         })
     }
+})
+//notes
+//add notes
+user.post("/addNotes",upload.single("file"),async(req,res)=>{
+    const savedFile = await File.create({
+      filename: req.file.filename,
+      subjectID:req.body.SubjectId,
+      originalname: req.file.originalname,
+      path: req.file.path,
+      mimetype: req.file.mimetype,
+      size: req.file.size});
+      res.send("lol")
 })
 //Logout
 user.post("/logout", (req, res) => {

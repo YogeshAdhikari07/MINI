@@ -21,8 +21,11 @@ pages.get('/home', studentAuth, async (req, res) => {
         user: userdata
     });
 });
-pages.get('/teacher', teacherAuth, (req, res) => {
-    res.render('teacher');
+pages.get('/teacher', teacherAuth,async (req, res) => {
+    const SubjectData =await     SubjectSchema.find();
+    res.render('teacher',{
+        subjectData:SubjectData
+    });
 })
 pages.get('/admin', adminAuth, async (req, res) => {
     try {
@@ -39,8 +42,17 @@ pages.get('/admin', adminAuth, async (req, res) => {
 })
 //Notes
 //Semester Calls
-pages.get("/semester/:id", studentAuth, (req, res) => {
-    console.log(req.params.id);
-    res.send(req.params.id);
+pages.get("/semester/:id", studentAuth,async (req, res) => {
+    try {
+        const subject = await SubjectSchema.find({
+            semester: req.params.id
+        });
+        res.render('subjects', {
+            subjectData: subject
+        });
+    }
+    catch (err) {
+        res.status(503).json({ message: "Server Error!" })
+    }
 })
 module.exports = pages;

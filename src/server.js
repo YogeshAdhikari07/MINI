@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 dotenv.config();
 server.use(cookieParser());
 const port = process.env.PORT || 3000;
-
+server.use("/uploads", express.static("uploads"));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 

@@ -81,18 +81,18 @@
             <%semester=["First Semester","Second Semester","Third Semester","Fourth Semester","Fifth Semester","Sixth Semester"]%>
                 <%colour=["lime","orange","blue","yellow","red","green"]%>
                     <%for(let i=0;i<6;++i){%>
-                        <div id="<%=(i+1)%>" class="px-4 py-3 border-2 rounded flex flex-col gap-2 justify-center">
+                        <div id="Semester <%=(i+1)%>"
+                            class="px-4 py-3 border-2 rounded flex flex-col gap-2 justify-center">
                             <span class="flex flex-row gap-2 px-4 py-2 border-b-2 w-full"><img class="h-[1.3rem]"
                                     src="/svgImg/semester.svg" alt="folder">
                                 <h1>
                                     <%=semester[i]%>
                                 </h1>
                             </span>
-                            <div class="sub5 flex flex-row gap-3 px-3 py-2">
+                            <div id="<%=(i+1)%>" class="sub5 flex flex-wrap flex-row gap-3 px-3 py-2">
                                 <%SubjectData.forEach((Subject)=>{%>
                                     <%if(Number(Subject.semester)===(i+1)){%>
-                                        <span
-                                            class="flex flex-col gap-1 px-3 py-2 border-2 text-center <%=`hover:bg-${colour[i]}-300`%>">
+                                        <span class="flex flex-col gap-1 px-3 py-2 border-2 text-center bg-violet-200">
                                             <table>
                                                 <tr>
                                                     <td class="px-2 py-2">
@@ -130,7 +130,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="px-2 py-2">
-                                                        <button type="button"
+                                                        <button type="button" onclick="deleteSubject('<%=Subject._id%>')"
                                                             class="delete flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-white w-full"><img
                                                                 class="h-[1.2rem]" src="/svgImg/delete.svg"
                                                                 alt="Delete">Delete</button>
