@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/css/teacher.css">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
+
 <body class="bg-[#FDFBD4]">
     <nav class="border-b-3">
         <h1 class="text-2xl font-bold">ADMIN PANEL</h1>
@@ -15,30 +17,80 @@
         <ul>
             <li><button id="Notes-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
                         class="h-[1.2rem]" src="/svgImg/notes.svg" alt="Notes">Notes</button></li>
-            <li><button id="Logout-selector" type="button" class="flex flex-row gap-2 items-center w-full"><img
-                        class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</button></li>
+            <li><button id="Logout-selector" type="button" class="flex flex-row gap-2 items-center w-full"
+                    onclick="logout()"><img class="h-[1.2rem]" src="/svgImg/logout.svg" alt="Logout">Logout</button>
+            </li>
         </ul>
     </div>
     <div class="teacher">
         <div class="nav flex flex-row justify-between items-center px-4 py-3">
             <h1 class="text-2xl font-bold">Notes</h1>
-            <button id="addnote" class="flex flex-row border-2 gap-2 px-4 py-3 rounded hover:bg-[#FDFBD4]"><img src="/svgImg/add-svg.svg" alt="ADD" class="h-[1.3rem]"> ADD NOTES</button>
+            <button id="addnote" class="flex flex-row border-2 gap-2 px-4 py-3 rounded hover:bg-[#FDFBD4]"><img
+                    src="/svgImg/add-svg.svg" alt="ADD" class="h-[1.3rem]"> ADD NOTES</button>
+        </div>
+        <div class="container p-5 bg-grey-100 h-[1fr] flex flex-wrap items-start gap-4">
+            <% noteData.forEach(note=> { %>
+
+                <!-- Card -->
+                <div
+                    class="bg-[#FDFBD4] shadow-lg border-2 rounded-2xl shadow hover:shadow-lg transition p-5 flex flex-col justify-between">
+
+                    <!-- Icon -->
+                    <div class="flex justify-center mb-4">
+                        <%let icon='/svgImg/file.svg' ;if (note.mimetype.startsWith('image/')) {icon='/svgImg/image.svg' ;}else if (note.mimetype==='application/pdf' ) {icon='/svgImg/pdf.svg' ;} else if(note.mimetype==='application/vnd.openxmlformats-officedocument.wordprocessingml.document' ){icon='/svgImg/text_word.svg' ;}%>
+                        <img src="<%=icon%>" alt="<%=note.mimetype%>" class="w-16 h-16">
+                    </div>
+
+                    <!-- File Info -->
+                    <div class="text-center">
+                        <h2 class="font-semibold text-lg truncate">
+                            <%= note.noteName %>
+                        </h2>
+                        <p class="text-sm text-gray-500">
+                            Size: <%= (note.size / 1024).toFixed(2) %> KB
+                        </p>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="mt-4 flex gap-2">
+                        <!-- View -->
+                        <a href="<%= note.path %>" target="_blank"
+                            class="flex-1 text-center bg-blue-500 border-2 border-black p-2 text-white py-2 rounded-lg hover:bg-blue-600">
+                            View
+                        </a>
+
+                        <!-- Download -->
+                        <a href="<%= note.path.replace('/upload/', '/upload/fl_attachment/') %>"" target=" _blank"
+                            class="flex-1 text-center bg-green-500 p-2 border-2 border-black text-white py-2 rounded-lg hover:bg-green-600">
+                            Download
+                        </a>
+                    </div>
+
+                </div>
+
+                <% }) %>
+
         </div>
     </div>
+
     <div class="noteform absolute flex h-full w-full justify-center items-center hidden">
-        <form class="border-2 flex flex-col bg-white rounded-[2rem] p-4 gap-2" action="/user/addNotes" method="post" enctype="multipart/form-data">
+        <form id="subform" class="border-2 flex flex-col bg-white rounded-[2rem] p-4 gap-2" action="/user/addNotes"
+            method="post" enctype="multipart/form-data">
             <h1 class="text-2xl font-bold mx-auto">Add Notes</h1>
             <label for="NoteName">
                 Note Name
             </label>
-            <input class="border-2 rounded p-2 px-2" type="text" name="Notename" id="NoteName" required/>
+            <input class="border-2 rounded p-2 px-2" type="text" name="Notename" id="NoteName" required />
             <label for="subject">Subject</label>
             <select name="SubjectId" id="subject" class=" border-2 p-2">
                 <%subjectData.forEach((subject)=>{%>
-                    <option value="<%=subject._id%>"><%=subject.subjectName%></option>
-                <%})%>
+                    <option value="<%=subject._id%>">
+                        <%=subject.subjectName%>
+                    </option>
+                    <%})%>
             </select>
-            <input type="file" accept=".jpg,.png,.pdf" name="file" class="border-2 h-[100px] flex flex-wrap p-2" required/>
+            <input type="file" accept="image/*,.pdf,.docx,.txt" name="file" class="border-2 h-[100px] flex flex-wrap p-2"
+                required />
             <div class="btn flex flex-row gap-5 justify-center items-center">
                 <button type="submit" class="px-3 py-2 bg-black text-white rounded">Add</button>
                 <button id="canbtn" type="button" class="px-3 py-2 bg-black text-white rounded">Cancel</button>
@@ -47,15 +99,23 @@
     </div>
     <script>
         const add_btn = document.getElementById("addnote");
-        add_btn.addEventListener("click",()=>{
+        const subbtn = document.getElementById("subform");
+        add_btn.addEventListener("click", () => {
             document.querySelector(".noteform").classList.remove("hidden");
         })
-        document.getElementById("canbtn").addEventListener("click",()=>
-        {
+        document.getElementById("canbtn").addEventListener("click", () => {
             document.querySelector(".noteform").classList.add("hidden");
-            document.getElementsByTagName("input")[0].value="";
-            document.getElementsByTagName("select")[0].value="";
+            document.getElementsByTagName("input")[0].value = "";
+            document.getElementsByTagName("select")[0].value = "";
         });
+        async function logout() {
+            await fetch("/user/logout", {
+                method: "POST",
+                credentials: "include"
+            });
+            window.location.href = "/";
+        }
     </script>
 </body>
+
 </html>

@@ -191,14 +191,19 @@ user.post('/subject-form',async(req,res)=>{
 //notes
 //add notes
 user.post("/addNotes",upload.single("file"),async(req,res)=>{
-    const savedFile = await File.create({
-      filename: req.file.filename,
-      subjectID:req.body.SubjectId,
-      originalname: req.file.originalname,
-      path: req.file.path,
-      mimetype: req.file.mimetype,
-      size: req.file.size});
-      res.send("lol")
+    try {
+      const savedFile = await File.create({
+        noteName:req.body.Notename,
+        filename: req.file.filename,
+        subjectID:req.body.SubjectId,
+        originalname: req.file.originalname,
+        path: req.file.path,
+        mimetype: req.file.mimetype,
+        size: req.file.size});
+        res.redirect('/page/teacher')
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 })
 //Logout
 user.post("/logout", (req, res) => {
