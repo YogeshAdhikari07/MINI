@@ -4,210 +4,239 @@ const userSchema = require("../modules/user");
 const bcrypt = require("bcrypt");
 const teacherSchema = require("../modules/teacher");
 const adminModule = require("../modules/admin");
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const semesterModule = require("../modules/semester");
 const upload = require("../middleware/upload");
 const File = require("../modules/notes");
+const cloudinary = require("../middleware/cloudinary");
 //Student Routes
 // 1)Student Signup
 user.get("/sign", (req, res) => {
-    res.render("sign");
+  res.render("sign");
 });
 user.post("/sign", async (req, res) => {
-    const { username, email, password } = req.body;
-    const encryptedPass = await bcrypt.hash(password, 10);
-    try {
-        await userSchema.create({
-            username: username,
-            email: email,
-            password: encryptedPass,
-        });
-    } catch (err) {
-        res.status(404).json(err);
-    }
-    const student = await userSchema.findOne({
-        username:username,
-        email:email
+  const { username, email, password } = req.body;
+  const encryptedPass = await bcrypt.hash(password, 10);
+  try {
+    await userSchema.create({
+      username: username,
+      email: email,
+      password: encryptedPass,
     });
-    const token = jwt.sign({
-        id:student._id,
-        username:student.username
-    },process.env.SECRET_KEY,{expiresIn:'12h'});
-    res.cookie("token",token, {
-        httpOnly: true,   // can't access from JS (security)
-        secure: false,    // true in production (HTTPS)
-    })
-    res.redirect('/page/home')
-
+  } catch (err) {
+    res.status(404).json(err);
+  }
+  const student = await userSchema.findOne({
+    username: username,
+    email: email,
+  });
+  const token = jwt.sign(
+    {
+      id: student._id,
+      username: student.username,
+    },
+    process.env.SECRET_KEY,
+    { expiresIn: "12h" },
+  );
+  res.cookie("token", token, {
+    httpOnly: true, // can't access from JS (security)
+    secure: false, // true in production (HTTPS)
+  });
+  res.redirect("/page/home");
 });
 // 2)Student Login
 user.get("/Studentlogin", (req, res) => {
-    res.render("studentLogin");
+  res.render("studentLogin");
 });
 user.post("/Studentlogin", async (req, res) => {
-    const { username, password } = req.body;
-    const student = await userSchema.findOne({
-        username: username,
+  const { username, password } = req.body;
+  const student = await userSchema.findOne({
+    username: username,
+  });
+  if (!student) {
+    res.status(404).json({
+      message: "Not Found!",
     });
-    if (!student) {
-        res.status(404).json({
-            message: "Not Found!",
-        });
+  } else {
+    const isPassCorrect = await bcrypt.compare(password, student.password);
+    if (!isPassCorrect) {
+      res.status(404).json({
+        message: "Not Found!",
+      });
     } else {
-        const isPassCorrect = await bcrypt.compare(password, student.password);
-        if (!isPassCorrect) {
-            res.status(404).json({
-                message: "Not Found!",
-            });
-        } else {
-            const token= jwt.sign({
-                id:student._id,
-                username:username,
-            },process.env.SECRET_KEY,{expiresIn:'12h'});
-            res.cookie('token',token,{
-                httpOnly: true,   // can't access from JS (security)
-                secure: false,
-            })
-            res.redirect("/page/home");
-        }
+      const token = jwt.sign(
+        {
+          id: student._id,
+          username: username,
+        },
+        process.env.SECRET_KEY,
+        { expiresIn: "12h" },
+      );
+      res.cookie("token", token, {
+        httpOnly: true, // can't access from JS (security)
+        secure: false,
+      });
+      res.redirect("/page/home");
     }
+  }
 });
 //Teacher Routes
 // 1)Teacher Login
-user.get("/teacher-login",(req, res) => {
-    res.render("teacherLogin");
+user.get("/teacher-login", (req, res) => {
+  res.render("teacherLogin");
 });
 user.post("/teacherLogin", async (req, res) => {
-    const { username,password } = req.body;
-    const teacher = await teacherSchema.findOne({
-        username:username
+  const { username, password } = req.body;
+  const teacher = await teacherSchema.findOne({
+    username: username,
+  });
+  if (!teacher) {
+    return res.status(404).json({
+      message: "Not Found!",
     });
-    if (!teacher) {
-        return res.status(404).json({
-            message: "Not Found!",
-        });
+  } else {
+    if (await bcrypt.compare(password, teacher.password)) {
+      const token = await jwt.sign(
+        {
+          id: teacher._id,
+          username: teacher.username,
+        },
+        process.env.TEACHER_KEY,
+        { expiresIn: "12h" },
+      );
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+      });
+      res.redirect("/page/teacher");
     } else {
-        if (await bcrypt.compare(password, teacher.password)) {
-            const token = await jwt.sign({
-                id:teacher._id,
-                username:teacher.username
-            },process.env.TEACHER_KEY,{expiresIn:'12h'});
-            res.cookie('token',token,{
-                httpOnly:true,
-                secure:false
-            });
-            res.redirect("/page/teacher");
-        } else {
-            return res.status(404).json({
-                message: "Not Found",
-            });
-        }
+      return res.status(404).json({
+        message: "Not Found",
+      });
     }
+  }
 });
 // 2)Teacher Registration
-user.post('/teacherRegister',async(req,res)=>{
-    const {username,password}=req.body;
-    const encryptedpassword = await bcrypt.hash(password,10);
-    try{
-        await teacherSchema.create({
-            username:username,
-            password:encryptedpassword
-        })
-        return res.status(200).json({
-            message:"Saved!"
-        })
-    }
-    catch(err){
-        console.log(err);
-        return res.status(500).json({
-            message:'Server Error!'
-        })
-    }
+user.post("/teacherRegister", async (req, res) => {
+  const { username, password } = req.body;
+  const encryptedpassword = await bcrypt.hash(password, 10);
+  try {
+    await teacherSchema.create({
+      username: username,
+      password: encryptedpassword,
+    });
+    return res.status(200).json({
+      message: "Saved!",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Server Error!",
+    });
+  }
 });
 user.delete("/deleteteacher/:id", async (req, res) => {
-  try{
+  try {
     await teacherSchema.findByIdAndDelete(req.params.id);
-    res.status(200).json({message:"Teacher deleted!"});
-  }
-  catch(err)
-  {
-    res.status(503).json({message:"Server Side Error"})
+    res.status(200).json({ message: "Teacher deleted!" });
+  } catch (err) {
+    res.status(503).json({ message: "Server Side Error" });
   }
 });
 //Admin Routes
 //Admin Login
 user.get("/adminLogin", (req, res) => {
-    res.render("adminlogin");
+  res.render("adminlogin");
 });
 user.post("/admin", async (req, res) => {
-    const { username, password } = req.body;
-    const admin = await adminModule.findOne({
-        username:username
-    });
-    if (!admin) {
-        return res.status(404).json({ message: "Not Found!" });
-    }else {
-        const checkpass = await bcrypt.compare(password,admin.password);
-        if (!checkpass) {
-            return res.status(404).json({ message: "Not Found!" });
-        }
-        else {
-            const token= jwt.sign({
-                id:admin._id,
-                username:username,
-            },process.env.ADMIN_KEY,{expiresIn:'2h'});
-            res.cookie('token',token,{
-                httpOnly: true,   // can't access from JS (security)
-                secure: false,
-            })
-            res.redirect('/page/admin')
-        }
+  const { username, password } = req.body;
+  const admin = await adminModule.findOne({
+    username: username,
+  });
+  if (!admin) {
+    return res.status(404).json({ message: "Not Found!" });
+  } else {
+    const checkpass = await bcrypt.compare(password, admin.password);
+    if (!checkpass) {
+      return res.status(404).json({ message: "Not Found!" });
+    } else {
+      const token = jwt.sign(
+        {
+          id: admin._id,
+          username: username,
+        },
+        process.env.ADMIN_KEY,
+        { expiresIn: "2h" },
+      );
+      res.cookie("token", token, {
+        httpOnly: true, // can't access from JS (security)
+        secure: false,
+      });
+      res.redirect("/page/admin");
     }
+  }
 });
-//Course 
+//Course
 //Add Course
-user.post('/subject-form',async(req,res)=>{
-    const {subjectname,subjectcode,semester} = req.body;
-    try
-    {
-        await semesterModule.create({
-            subjectName:subjectname,
-            subjectCode:subjectcode,
-            semester:semester
-        });
-        res.status(200).json({
-            message:"Saved!"
-        })
-    }
-    catch(err)
-    {
-        console.log(err);
-        res.status(500).json({
-            message:"Server Error!"
-        })
-    }
-})
+user.post("/subject-form", async (req, res) => {
+  const { subjectname, subjectcode, semester } = req.body;
+  try {
+    await semesterModule.create({
+      subjectName: subjectname,
+      subjectCode: subjectcode,
+      semester: semester,
+    });
+    res.status(200).json({
+      message: "Saved!",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error!",
+    });
+  }
+});
 //notes
 //add notes
-user.post("/addNotes",upload.single("file"),async(req,res)=>{
-    try {
-      const savedFile = await File.create({
-        noteName:req.body.Notename,
-        filename: req.file.filename,
-        subjectID:req.body.SubjectId,
-        originalname: req.file.originalname,
-        path: req.file.path,
-        mimetype: req.file.mimetype,
-        size: req.file.size});
-        res.redirect('/page/teacher')
+user.post("/addNotes", upload.single("file"), async (req, res) => {
+  try {
+    const savedFile = await File.create({
+      noteName: req.body.Notename,
+      filename: req.file.filename,
+      subjectID: req.body.SubjectId,
+      originalname: req.file.originalname,
+      path: req.file.path,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+    });
+    res.redirect("/page/teacher");
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-})
+});
+user.delete("/deleteNote/:id", async (req, res) => {
+  try {
+    const file = await File.findById(req.params.id);
+    if (file.mimetype.includes("image/")) {
+      await cloudinary.uploader.destroy(file.filename, {
+        resource_type: "image"
+      });
+    } else if (file.mimetype.includes("application/")) {
+      await cloudinary.uploader.destroy(file.filename, {
+        resource_type: "raw"
+      });
+    }
+    await File.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Deleted" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "ERROR" });
+  }
+});
 //Logout
 user.post("/logout", (req, res) => {
-    res.clearCookie("token");
-    res.redirect("/");
+  res.clearCookie("token");
+  res.redirect("/");
 });
 module.exports = user;

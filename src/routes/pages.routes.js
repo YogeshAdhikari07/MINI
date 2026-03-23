@@ -58,7 +58,7 @@ pages.get("/semester/:id", studentAuth,async (req, res) => {
     }
 })
 //notes page render
-pages.get("/notes/:id",async(req,res)=>{
+pages.get("/notes/:id",studentAuth,async(req,res)=>{
     const notesData = await NoteSchema.find({
         subjectID:req.params.id
     });

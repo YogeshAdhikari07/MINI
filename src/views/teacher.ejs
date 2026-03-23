@@ -30,18 +30,13 @@
         </div>
         <div class="container p-5 bg-grey-100 h-[1fr] flex flex-wrap items-start gap-4">
             <% noteData.forEach(note=> { %>
-
-                <!-- Card -->
                 <div
-                    class="bg-[#FDFBD4] shadow-lg border-2 rounded-2xl shadow hover:shadow-lg transition p-5 flex flex-col justify-between">
-
-                    <!-- Icon -->
+                    class="bg-[#FDFBD4] shadow-lg border-2 rounded-2xl shadow hover:shadow-lg transition p-5 flex flex-col justify-between"
+                    id="<%=note._id%>">
                     <div class="flex justify-center mb-4">
                         <%let icon='/svgImg/file.svg' ;if (note.mimetype.startsWith('image/')) {icon='/svgImg/image.svg' ;}else if (note.mimetype==='application/pdf' ) {icon='/svgImg/pdf.svg' ;} else if(note.mimetype==='application/vnd.openxmlformats-officedocument.wordprocessingml.document' ){icon='/svgImg/text_word.svg' ;}%>
                         <img src="<%=icon%>" alt="<%=note.mimetype%>" class="w-16 h-16">
                     </div>
-
-                    <!-- File Info -->
                     <div class="text-center">
                         <h2 class="font-semibold text-lg truncate">
                             <%= note.noteName %>
@@ -50,26 +45,21 @@
                             Size: <%= (note.size / 1024).toFixed(2) %> KB
                         </p>
                     </div>
-
-                    <!-- Buttons -->
                     <div class="mt-4 flex gap-2">
-                        <!-- View -->
                         <a href="<%= note.path %>" target="_blank"
                             class="flex-1 text-center bg-blue-500 border-2 border-black p-2 text-white py-2 rounded-lg hover:bg-blue-600">
                             View
                         </a>
-
-                        <!-- Download -->
                         <a href="<%= note.path.replace('/upload/', '/upload/fl_attachment/') %>"" target=" _blank"
                             class="flex-1 text-center bg-green-500 p-2 border-2 border-black text-white py-2 rounded-lg hover:bg-green-600">
                             Download
                         </a>
+                        <button onclick="deleteNote('<%=note._id%>')" class="p-2 border-2 bg-black bg-red-300 hover:bg-red-400 rounded-lg" type="button">
+                            Delete
+                        </button>
                     </div>
-
                 </div>
-
-                <% }) %>
-
+            <% }) %>
         </div>
     </div>
 
@@ -114,6 +104,19 @@
                 credentials: "include"
             });
             window.location.href = "/";
+        }
+        async function deleteNote(id)
+        {
+            const response = await fetch(`/user/deleteNote/${id}`,
+            {
+                method:'DELETE'
+            })
+            const data = await response.json();
+            alert(data.message);
+            if(response.status===200)
+            {
+                window.location.href="/page/teacher"
+            }
         }
     </script>
 </body>
