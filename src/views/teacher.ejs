@@ -63,23 +63,23 @@
         </div>
     </div>
 
-    <div class="noteform absolute flex h-full w-full justify-center items-center hidden">
-        <form id="subform" class="border-2 flex flex-col bg-white rounded-[2rem] p-4 gap-2" action="/user/addNotes"
+    <div class="noteform absolute flex h-full w-full justify-center items-center hidden top-0 left-0">
+        <form id="subform" class="border-2 flex flex-col bg-white rounded-[2rem] p-3 gap-2 " action="/user/addNotes"
             method="post" enctype="multipart/form-data">
             <h1 class="text-2xl font-bold mx-auto">Add Notes</h1>
             <label for="NoteName">
                 Note Name
             </label>
-            <input class="border-2 rounded p-2 px-2" type="text" name="Notename" id="NoteName" required />
+            <input class="border-2 rounded p-2 px-2 w-[21rem]" type="text" name="Notename" id="NoteName" required />
             <label for="subject">Subject</label>
-            <select name="SubjectId" id="subject" class=" border-2 p-2">
+            <select name="SubjectId" id="subject" class=" border-2 p-2 w-[21rem]">
                 <%subjectData.forEach((subject)=>{%>
                     <option value="<%=subject._id%>">
                         <%=subject.subjectName%>
                     </option>
                     <%})%>
             </select>
-            <input type="file" accept="image/*,.pdf,.docx,.txt" name="file" class="border-2 h-[100px] flex flex-wrap p-2"
+            <input type="file" accept="image/*,.pdf,.docx,.txt" name="file" class="border-2 w-[21rem] h-[100px] flex flex-wrap p-2"
                 required />
             <div class="btn flex flex-row gap-5 justify-center items-center">
                 <button type="submit" class="px-3 py-2 bg-black text-white rounded">Add</button>
