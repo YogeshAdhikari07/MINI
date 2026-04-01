@@ -220,11 +220,13 @@ user.delete("/deleteNote/:id", async (req, res) => {
     const file = await File.findById(req.params.id);
     if (file.mimetype.includes("image/")) {
       await cloudinary.uploader.destroy(file.filename, {
-        resource_type: "image"
+        resource_type: "image",
+        type: "upload"  // default
       });
     } else if (file.mimetype.includes("application/")) {
-      await cloudinary.uploader.destroy(file.filename, {
-        resource_type: "raw"
+      await cloudinary.uploader.destroy(file.filename,{
+        resource_type: "image",
+        type: "upload"  // default
       });
     }
     await File.findByIdAndDelete(req.params.id);
