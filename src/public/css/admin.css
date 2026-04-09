@@ -21,7 +21,7 @@ html,body{
 body{
     display: grid;
     grid-template-rows: 4rem 1fr;
-    grid-template-columns: 16rem 1fr;
+    grid-template-columns: 0rem 1fr;
     grid-template-areas: "nav nav" "sidebar teacher";
     color: #38240D;
 }
@@ -61,4 +61,14 @@ li{
 {
     background-color: var(--soft-ivory-dark);
     grid-area: notes;
+}
+@media (min-width: 768px) {
+  body{
+    grid-template-rows: 4rem 1fr;
+    grid-template-columns: 16rem 1fr;
+  }
+  #menu
+  {
+    display: none;
+  }
 }

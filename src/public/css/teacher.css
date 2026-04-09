@@ -21,7 +21,7 @@ html,body{
 body{
     display: grid;
     grid-template-rows: 4rem 1fr;
-    grid-template-columns: 16rem 1fr;
+    grid-template-columns: 0rem 1fr;
     grid-template-areas: "nav nav" "sidebar teacher";
     color: #38240D;
 }
@@ -52,4 +52,10 @@ li{
     margin: 0rem 1rem;
     gap: 1rem;
     border-bottom: 2px solid black;
+}
+@media (min-width: 768px) {
+  body{
+    grid-template-rows: 4rem 1fr;
+    grid-template-columns: 16rem 1fr;
+  }
 }

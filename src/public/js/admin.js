@@ -1,13 +1,43 @@
 //UI Section
-document.getElementById('Teacher-selector').addEventListener('click', () => {
-    document.querySelector("body").style.gridTemplateAreas = `"nav nav" "sidebar teacher"`;
-    document.querySelector(".teacher").classList.remove('hidden');
-    document.querySelector(".notes").classList.add('hidden');
-});
-document.getElementById('Notes-selector').addEventListener('click', () => {
-    document.querySelector("body").style.gridTemplateAreas = `"nav nav" "sidebar notes"`;
-    document.querySelector(".teacher").classList.add('hidden');
-    document.querySelector(".notes").classList.remove('hidden');
+if (document.body.clientWidth < 768) {
+    document.getElementById('Teacher-selector').addEventListener('click', () => {
+        document.querySelector("body").style.gridTemplateAreas = `"nav nav" "sidebar teacher"`;
+        document.querySelector(".teacher").classList.remove('hidden');
+        document.querySelector(".notes").classList.add('hidden');
+        document.querySelector("body").style.gridTemplateColumns = "0rem 1fr";
+        menutoggle = false;
+    });
+} else {
+    document.getElementById('Teacher-selector').addEventListener('click', () => {
+        document.querySelector("body").style.gridTemplateAreas = `"nav nav" "sidebar teacher"`;
+        document.querySelector(".teacher").classList.remove('hidden');
+        document.querySelector(".notes").classList.add('hidden');
+    });
+}
+if (document.body.clientWidth< 768) {
+    document.getElementById('Notes-selector').addEventListener('click', () => {
+        document.querySelector("body").style.gridTemplateAreas = `"nav nav" "sidebar notes"`;
+        document.querySelector(".teacher").classList.add('hidden');
+        document.querySelector(".notes").classList.remove('hidden');
+        document.querySelector("body").style.gridTemplateColumns = "0rem 1fr";
+        menutoggle = false;
+    });
+} else {
+    document.getElementById('Notes-selector').addEventListener('click', () => {
+        document.querySelector("body").style.gridTemplateAreas = `"nav nav" "sidebar notes"`;
+        document.querySelector(".teacher").classList.add('hidden');
+        document.querySelector(".notes").classList.remove('hidden');
+    });
+}
+let menutoggle = false;
+document.getElementById("menu").addEventListener('click', () => {
+    if (!menutoggle) {
+        document.querySelector("body").style.gridTemplateColumns = "1fr 0rem";
+        menutoggle = true;
+    } else {
+        document.querySelector("body").style.gridTemplateColumns = "0rem 1fr";
+        menutoggle = false;
+    }
 });
 //teacher-Section
 const teacherform = document.querySelector(".teacherform");

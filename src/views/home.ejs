@@ -30,26 +30,8 @@
             <%}%>
         </div>
     </div>
-    <div class="user hidden">
-        <div class="nav flex flex-row justify-between items-center px-6 py-4">
-            <span class="text-2xl font-bold" id="section-name-user">Users</span>
-            <button class="flex items-center gap-2 px-4 py-2 border-2 rounded hover:bg-[#FDFBD4]" id="add-btn"><img class="h-[1.3rem]" src="/svgImg/upload.svg" alt="Upload">Add Document</button>
-        </div>
-    </div>
     <script>
-        const notesBtn = document.getElementById('notes-btn');
-        const usersBtn = document.getElementById('users-btn');
         const logoutBtn = document.getElementById('logout-btn');
-        notesBtn.addEventListener('click', () => {
-            document.querySelector('body').style.gridTemplateAreas=`"nav nav" "sidebar notes"`;
-            document.querySelector('.notes').classList.remove('hidden');
-            document.querySelector('.user').classList.add('hidden');
-        })
-        usersBtn.addEventListener('click', () => {
-            document.querySelector('body').style.gridTemplateAreas=`"nav nav" "sidebar user"`;
-            document.querySelector('.notes').classList.add('hidden');
-            document.querySelector('.user').classList.remove('hidden');
-        })
         logoutBtn.addEventListener('click',async () => {
             await fetch("/user/logout", {
                 method: "POST",

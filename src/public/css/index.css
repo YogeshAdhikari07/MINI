@@ -177,7 +177,13 @@ nav .container {
     align-items: center;
     animation: slideInRight 0.8s ease-out;
 }
-
+.a
+{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    animation: slideInRight 0.8s ease-out;
+}
 .nav-links a {
     color: var(--soft-ivory);
     text-decoration: none;
@@ -748,7 +754,7 @@ footer p:hover {
         font-size: 1.1rem;
     }
 
-    .nav-links {
+    .a {
         display: none;
     }
 
